@@ -35,13 +35,13 @@ jobs:
           scan-type: 'fs'
           ignore-unfixed: true
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: 'trivy-reposcan-results.sarif'
           severity: 'CRITICAL,HIGH,MEDIUM'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'trivy-reposcan-results.sarif'
           
       - name: Build an image from Dockerfile
         run: |
@@ -53,10 +53,10 @@ jobs:
           image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
+          output: 'trivy-imgscan-results.sarif'
           #severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'trivy-imgscan-results.sarif'
