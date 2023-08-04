@@ -29,6 +29,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
+      - name: Create SARIF Files Directory
+        run: mkdir -p sarif-files
+
       - name: Run Trivy vulnerability scanner in repository mode
         uses: aquasecurity/trivy-action@master
         with:
@@ -39,11 +42,8 @@ jobs:
           output: 'trivy-repo-scan-results.sarif'
           #severity: 'CRITICAL,HIGH,MEDIUM'
 
-      - name: Upload Trivy repo scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          category: 'repository-scanning'
-          sarif_file: 'trivy-repo-scan-results.sarif'
+      - name: Copy repository scan results to sarif-files directory
+        run: cp trivy-repo-scan-results.sarif sarif-files
         
       - name: Build an image from Dockerfile
         run: |
@@ -59,8 +59,11 @@ jobs:
           output: 'trivy-img-scan-results.sarif'
           #severity: 'CRITICAL,HIGH,MEDIUM'
 
-      - name: Upload Trivy image scan results to GitHub Security tab
+      - name: Copy image scan results to sarif-files directory
+        run: cp trivy-img-scan-results.sarif sarif-files
+
+      - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          category: 'image-scanning'
-          sarif_file: 'trivy-img-scan-results.sarif'
+          category: 'trivy-scanning'
+          sarif_file: sarif-files
