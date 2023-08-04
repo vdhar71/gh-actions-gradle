@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: trivy
+name: Trivy Image Scan
 
 on:
   push:
@@ -26,25 +26,9 @@ jobs:
     name: Build
     runs-on: "ubuntu-22.04"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+     # - name: Checkout code
+     #   uses: actions/checkout@v3
         
-      - name: Run Trivy vulnerability scanner in repository mode
-        uses: aquasecurity/trivy-action@master
-        with:
-          category: 'repository-scanning/'
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          category: 'repository-scanning/'
-          sarif_file: 'trivy-results.sarif'
-          
       - name: Build an image from Dockerfile
         run: |
           docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
@@ -52,15 +36,15 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          category: 'image-scanning/'
+          category: 'image-scanning'
           image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          #severity: 'CRITICAL,HIGH'
+          output: 'trivy-img-scan-results.sarif'
+          #severity: 'CRITICAL,HIGH,MEDIUM'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          category: 'image-scanning/'
-          sarif_file: 'trivy-results.sarif'
+          category: 'image-scanning'
+          sarif_file: 'trivy-img-scan-results.sarif'
