@@ -32,7 +32,7 @@ jobs:
       - name: Run Trivy vulnerability scanner in repository mode
         uses: aquasecurity/trivy-action@master
         with:
-          category: 'repository-scanning'
+          category: 'repository-scanning/'
           scan-type: 'fs'
           ignore-unfixed: true
           format: 'sarif'
@@ -42,7 +42,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          category: 'repository-scanning'
+          category: 'repository-scanning/'
           sarif_file: 'trivy-results.sarif'
           
       - name: Build an image from Dockerfile
@@ -52,7 +52,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          category: 'image-scanning'
+          category: 'image-scanning/'
           image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
@@ -62,5 +62,5 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          category: 'image-scanning'
+          category: 'image-scanning/'
           sarif_file: 'trivy-results.sarif'
