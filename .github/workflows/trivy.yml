@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Trivy Repository Scan 
+name: Trivy Repository Scan spring-petclinic using Gradle
 
 on:
   push:
